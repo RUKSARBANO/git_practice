@@ -1,0 +1,42 @@
+from matplotlib import pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.cluster.hierarchy import cophenet
+from scipy.spatial.distance import pdist
+import numpy as np
+
+np.random.seed(4711)
+a = np.random.multivariate_normal([10, 0], [[3, 1], [1, 4]], size=[100,])
+b = np.random.multivariate_normal([0, 20], [[3, 1], [1, 4]], size=[50,])
+X = np.concatenate((a, b),)
+
+print( X.shape)
+print(X[:,0])
+plt.scatter(X[:,0], X[:,1])
+plt.show()
+Z = linkage(X, 'ward')
+c, coph_dists = cophenet(Z, pdist(X))
+print('Cophenetic Correlation Coefficient:',c)
+plt.figure(figsize=(25, 10))
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('Sample Index')
+plt.ylabel('Distance')
+dendrogram(
+Z,
+leaf_rotation=90,
+leaf_font_size=8,
+)
+plt.show()
+plt.title('Hierarchical Clustering Dendrogram (truncated)')
+plt.xlabel('sample index')
+plt.ylabel('distance')
+dendrogram(
+Z,
+truncate_mode='lastp',
+p=12,
+#show_leaf_counts=False,
+leaf_rotation=90,
+leaf_font_size=12,
+show_contracted=True,
+)
+plt.show()
+
